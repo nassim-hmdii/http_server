@@ -4,11 +4,18 @@
 #include <netdb.h>
 #include <cstring>
 #include <errno.h>
+#include <unistd.h>
 
 int main(){
 // Fetching the addrress info thats gonna be used by the socket API 
     struct addrinfo hints{};   //call the stucture a zero it
     addrinfo * servaddrinfo;    // set the pointer to the result linked list
+    // Creating the socket and the socket descriptor for futher operations done by the kernel
+    int sockfd;
+    int bindres;
+    struct sockaddr_storage clientaddr;
+    socklen_t addrsize = sizeof clientaddr;
+
     // Setting the 3 members values 
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -20,9 +27,6 @@ int main(){
     std::cerr<< "getaddrinfo error " <<gai_strerror(result) << '\n' ;
     return(1);
     }
-    // Creating the socket and the socket descriptor for futher operations done by the kernel
-    int sockfd;
-    int bindres;
 
     sockfd = socket(servaddrinfo -> ai_family, servaddrinfo -> ai_socktype, servaddrinfo -> ai_protocol);
     if(sockfd == -1){
@@ -45,6 +49,19 @@ int main(){
     } 
 
     std::cout << "Listening on port 8080..." << '\n';
+
+    // accepting a new connection
+
+    while(true){
+        int newfd = accept(sockfd, (struct sockaddr*) &clientaddr, &addrsize);
+        if(newfd == -1){
+            std::cerr << "Accept Error: " << strerror(errno) << '\n';
+            continue;
+        }
+        std::cout << "Got a New Connection !" << '\n';
+        close(newfd);
+    }
+
 
     freeaddrinfo(servaddrinfo);
     return 0;
