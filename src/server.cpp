@@ -14,7 +14,7 @@ int main(){
     int sockfd;
     int bindres;
     struct sockaddr_storage clientaddr;
-    socklen_t addrsize = sizeof clientaddr; // REVIEW THIS LINE
+    socklen_t addrsize = sizeof clientaddr;
     char buffer[1024];
     int recvbytes;
     int sendmsg;
@@ -55,7 +55,7 @@ int main(){
 
     std::cout << "Listening on port 8080..." << '\n';
 
-    // accepting a new connection
+    // ACCEPT NEW CONNECTIONS
 
     while(true){
         int newfd = accept(sockfd, (struct sockaddr*) &clientaddr, &addrsize);
@@ -65,7 +65,7 @@ int main(){
         }
         std::cout << "Got a New Connection !" << '\n';
 
-        // recv and add, make the server talk
+        // RECV AND SEND, MAKE THE SERVER ECHO BACK THE MESSAGE RECEIVED FROM THE CLIENT
         recvbytes = recv(newfd, buffer, sizeof(buffer) - 1, 0 );
 
         if(recvbytes == -1){
