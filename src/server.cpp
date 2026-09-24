@@ -45,7 +45,8 @@ int main(){
         std::cerr<< "Bind Error: "<< strerror(errno) << '\n';
         return(1);
     }
-
+    freeaddrinfo(servaddrinfo);
+    
     // set the socket to listen for incoming connections
     int listenres = listen(sockfd, 10); //setting the connection queue to 10 connections 
     if (listenres == -1){
@@ -86,9 +87,8 @@ int main(){
             }
         }
 
-        close(newfd);
+        close(newfd);   
     }
 
-    freeaddrinfo(servaddrinfo);
     return 0;
 }
