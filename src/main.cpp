@@ -37,7 +37,15 @@ int main(){
         return(1);
     }
 
-    std::cout << "Socket created and binded successfully" << '\n';
+    // set the socket to listen for incoming connections
+    int listenres = listen(sockfd, 10); //setting the connection queue to 10 connections 
+    if (listenres == -1){
+        std::cerr<<"Listening Error: " << strerror(errno) << '\n';
+        return(1);
+    } 
+
+    std::cout << "Listening on port 8080..." << '\n';
+
     freeaddrinfo(servaddrinfo);
     return 0;
 }
