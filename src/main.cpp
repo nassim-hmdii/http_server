@@ -14,7 +14,12 @@ int main(){
     int sockfd;
     int bindres;
     struct sockaddr_storage clientaddr;
-    socklen_t addrsize = sizeof clientaddr;
+    socklen_t addrsize = sizeof clientaddr; // REVIEW THIS LINE
+    char buffer[1024];
+    int recvbytes;
+    int sendmsg;
+    const char *response = "Hello, First contact w/ the server was successful !";
+
 
     // Setting the 3 members values 
     hints.ai_family = AF_UNSPEC;
@@ -59,9 +64,30 @@ int main(){
             continue;
         }
         std::cout << "Got a New Connection !" << '\n';
+
+        // recv and add, make the server talk
+        recvbytes = recv(newfd, buffer, sizeof(buffer) - 1, 0 );
+
+        if(recvbytes == -1){
+            std::cerr << "Receive Error: " << strerror(errno) << '\n';
+        }
+
+        else if (recvbytes == 0 ){
+            std::cout << "Client Closed the Connection !!" << '\n';
+        }
+        
+        else{
+            buffer[recvbytes] = '\0';
+            std::cout <<"Recieved " << recvbytes << " bytes." << '\n';
+            std::cout << "--> " << buffer << '\n';
+            sendmsg = send(newfd, response, strlen(response), 0);
+            if(sendmsg == -1) {
+                std::cerr << "Unsuccessful Response !" << strerror(errno) << '\n';
+            }
+        }
+
         close(newfd);
     }
-
 
     freeaddrinfo(servaddrinfo);
     return 0;
