@@ -15,7 +15,7 @@ int main(){
     int bindres;
     struct sockaddr_storage clientaddr;
     socklen_t addrsize = sizeof clientaddr;
-    char buffer[1024];
+    char buffer[4096];
     int recvbytes;
     int sendmsg;
     const char *response = "Hello, First contact w/ the server was successful !";
