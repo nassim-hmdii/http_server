@@ -5,6 +5,7 @@
 #include <cstring>
 #include <errno.h>
 #include <unistd.h>
+#include <string>
 
 int main(){
 // Fetching the addrress info thats gonna be used by the socket API 
@@ -81,6 +82,24 @@ int main(){
             buffer[recvbytes] = '\0';
             std::cout <<"Recieved " << recvbytes << " bytes." << '\n';
             std::cout << "--> " << buffer << '\n';
+
+            std::string request(buffer);
+            size_t pos = request.find('\n');
+            std::string first_line = request.substr(0, pos);
+            std::cout << "First line is: " << first_line << '\n';
+
+            size_t m_pos = first_line.find(' ');
+            size_t p_pos = first_line.find(' ', m_pos + 1);
+            std::string method = first_line.substr(0, m_pos);
+            std::string path = first_line.substr(m_pos + 1, p_pos - m_pos - 1);
+            std::string version = first_line.substr(p_pos + 1); 
+            // the last 5 lines are used to parse the http response and get the method, path and version of the request 
+            // using find and substr methods of the string class  
+
+            std::cout << "method: [" << method << "]\n";
+            std::cout << "path: [" << path << "]\n";
+            std::cout << "version: [" << version << "]\n";
+
             sendmsg = send(newfd, response, strlen(response), 0);
             if(sendmsg == -1) {
                 std::cerr << "Unsuccessful Response !" << strerror(errno) << '\n';
