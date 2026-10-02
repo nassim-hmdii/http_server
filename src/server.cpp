@@ -19,8 +19,6 @@ int main(){
     char buffer[4096];
     int recvbytes;
     int sendmsg;
-    const char *response = "Hello, First contact w/ the server was successful !";
-
 
     // Setting the 3 members values 
     hints.ai_family = AF_UNSPEC;
@@ -100,14 +98,23 @@ int main(){
             std::cout << "path: [" << path << "]\n";
             std::cout << "version: [" << version << "]\n";
 
-            sendmsg = send(newfd, response, strlen(response), 0);
+            //Build a response that the server can actually understand
+            std::string body = "<html><body><h1>Hello, First contact with the server was successful !</h1></body></html>";
+            std::string http_response =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: text/html\r\n"
+                "Content-Length: " + std::to_string(body.length()) + "\r\n"
+                "\r\n" + 
+                body;
+
+            sendmsg = send(newfd, http_response.c_str(), http_response.length(), 0);
             if(sendmsg == -1) {
                 std::cerr << "Unsuccessful Response !" << strerror(errno) << '\n';
             }
         }
 
         close(newfd);   
-    }
+    }   
 
     return 0;
 }
