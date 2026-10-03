@@ -99,6 +99,8 @@ int main(){
             std::cout << "version: [" << version << "]\n";
 
             //Build a response that the server can actually understand
+
+            if(path == "/"){
             std::string body = "<html><body><h1>Hello, First contact with the server was successful !</h1></body></html>";
             std::string http_response =
                 "HTTP/1.1 200 OK\r\n"
@@ -108,6 +110,20 @@ int main(){
                 body;
 
             sendmsg = send(newfd, http_response.c_str(), http_response.length(), 0);
+
+            }
+            else{
+            std::string body = "<html><body><h1>Not Found, Err 404</h1></body></html>";
+            std::string http_response =
+                "HTTP/1.1 404 Not Found\r\n"
+                "Content-Type: text/html\r\n"
+                "Content-Length: " + std::to_string(body.length()) + "\r\n"
+                "\r\n" + 
+                body;
+
+            sendmsg = send(newfd, http_response.c_str(), http_response.length(), 0);                
+            }
+
             if(sendmsg == -1) {
                 std::cerr << "Unsuccessful Response !" << strerror(errno) << '\n';
             }
