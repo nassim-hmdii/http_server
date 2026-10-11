@@ -91,7 +91,8 @@ end
 subgraph group_pages["HTML pages"]
   node_ok_page["200 page<br/>[200-OK.html]"]
   node_not_found_page["404 page<br/>[404-NotFound.html]"]
-  node_method_page["405 page"]
+  node_method_page["405 page<br/>[405-MethodNotAllowed.html]"]
+  node_500["500 fallback<br/>[inline string]"]
 end
 
 node_client(("HTTP client"))
@@ -101,12 +102,14 @@ node_listener -->|"calls"| node_builder
 node_builder -->|"reads for GET /"| node_ok_page
 node_builder -->|"reads for other paths"| node_not_found_page
 node_builder -->|"reads for non-GET"| node_method_page
+node_builder -->|"on file read failure"| node_500
 
 click node_listener "https://github.com/nassim-hmdii/http_server/blob/main/src/server.cpp"
 click node_builder "https://github.com/nassim-hmdii/http_server/blob/main/src/http.cpp"
 click node_ok_page "https://github.com/nassim-hmdii/http_server/blob/main/public/200-OK.html"
 click node_not_found_page "https://github.com/nassim-hmdii/http_server/blob/main/public/404-NotFound.html"
 click node_method_page "https://github.com/nassim-hmdii/http_server/blob/main/public/405-MethodNotAllowed.html"
+
 
 classDef toneNeutral fill:#f8fafc,stroke:#334155,stroke-width:1.5px,color:#0f172a
 classDef toneBlue fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
@@ -118,6 +121,7 @@ classDef toneTeal fill:#ccfbf1,stroke:#0f766e,stroke-width:1.5px,color:#134e4a
 class node_listener,node_client toneBlue
 class node_builder toneAmber
 class node_ok_page,node_not_found_page,node_method_page toneMint
+class node_500 toneRose
 ```
 
 `server.cpp` owns the network I/O. `http.cpp` owns the decision of what to
