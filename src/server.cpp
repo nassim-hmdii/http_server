@@ -6,8 +6,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include "http.h"
 
 int main(){
