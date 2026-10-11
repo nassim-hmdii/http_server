@@ -107,8 +107,6 @@ click node_builder "https://github.com/nassim-hmdii/http_server/blob/main/src/ht
 click node_ok_page "https://github.com/nassim-hmdii/http_server/blob/main/public/200-OK.html"
 click node_not_found_page "https://github.com/nassim-hmdii/http_server/blob/main/public/404-NotFound.html"
 click node_method_page "https://github.com/nassim-hmdii/http_server/blob/main/public/405-MethodNotAllowed.html"
-node_500["500 fallback<br/>[inline string]"]
-node_builder -->|"on file read failure"| node_500
 
 classDef toneNeutral fill:#f8fafc,stroke:#334155,stroke-width:1.5px,color:#0f172a
 classDef toneBlue fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
@@ -120,20 +118,6 @@ classDef toneTeal fill:#ccfbf1,stroke:#0f766e,stroke-width:1.5px,color:#134e4a
 class node_listener,node_client toneBlue
 class node_builder toneAmber
 class node_ok_page,node_not_found_page,node_method_page toneMint
-class node_500 toneRose
-```
-
-### Project structure
-
-```
-src/
-├── server.cpp   — socket setup, accept loop, request/response I/O
-├── http.h       — declares buildResponse()
-└── http.cpp     — request parsing and response construction
-public/
-├── 200-OK.html
-├── 404-NotFound.html
-└── 405-MethodNotAllowed.html
 ```
 
 `server.cpp` owns the network I/O. `http.cpp` owns the decision of what to
